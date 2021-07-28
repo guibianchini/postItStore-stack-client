@@ -1,0 +1,17 @@
+.contentBox {
+  }
+
+#productsImg{
+  height: 300px;
+  width: 300px;
+}
+
+
+#products{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.product{
+  flex: 0 0 33.333333%;
+}
