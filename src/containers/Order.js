@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Form, Card, Row, Col } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import LoaderButton from "../components/LoaderButton";
 import { onError } from "../libs/errorLib";
@@ -19,7 +16,8 @@ export default function Order() {
   const [addressComplement, setAddressComplement] = useState("");
 
   const [address, setAddress] = useState("");
-  
+
+
   const [product1, setProduct1] = useState("");
   const [product2, setProduct2] = useState("");
   const [product3, setProduct3] = useState("");
@@ -28,11 +26,10 @@ export default function Order() {
   const [totalPrice, setTotalPrice] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
-  
+
   function validateForm() {
     return content.length > 0 && nameClient.length > 0 && addressStreet.length > 0 && addressNumber.length > 0;
   }
-
 
   useEffect(() => {
     let products = '';
@@ -55,12 +52,12 @@ export default function Order() {
   async function handleSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
+
+    const { attributes } = await Auth.currentAuthenticatedUser();
     
-
-
     try {
-      await makeOrder({ nameClient, address, content, totalPrice});
-      history.push("/");
+      await makeOrder({ nameClient, emailClient: attributes.email, address, content, totalPrice});
+      history.push("/myorders");
     } catch (e) {
       onError(e);
       setIsLoading(false);
@@ -69,23 +66,10 @@ export default function Order() {
   
   function makeOrder(order) {
     order.content = order.content.replace(/\n/g,'; ');
-    console.log(order);
-    return API.post("order", "/sdsd", {
+    return API.post("order", "/postitstore", {
       body: order
     });
   }
-
-
-  const emailClient = Auth.currentUserInfo()
-  .then((response) => response.attributes)
-  .then((attributes) => {
-    return attributes.email;
-  });
-
-const getEmail = async () => {
-  let a = await emailClient;
-  console.log(a);
-};
 
   return (
       <Form onSubmit={handleSubmit}>
@@ -95,13 +79,6 @@ const getEmail = async () => {
           Nome Completo (*)
           </Form.Label>
           <Form.Control placeholder="ex.: João da Silva" value={nameClient} onChange={(e) => setNameClient(e.target.value)}/>
-        </Form.Group>
-
-        <Form.Group controlId="nameClient">
-          <Form.Label>
-          E-mail
-          </Form.Label>
-          <Form.Control id="emaill" placeholder="ex.: João da Silva" value={emailClient.then(e => e)} onChange={(e) => setNameClient(e.target.value)}/>
         </Form.Group>
 
         <Row className="mb-3">
@@ -200,7 +177,7 @@ const getEmail = async () => {
         </Row>
         
         <LoaderButton block type="submit" size="lg" variant="primary" isLoading={isLoading} disabled={!validateForm()} >
-          Create
+          Comprar
         </LoaderButton>
 
       </Form>

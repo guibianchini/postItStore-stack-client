@@ -29,7 +29,6 @@ export default function Login() {
     try {
       await Auth.signIn(fields.email, fields.password);
       userHasAuthenticated(true);
-      this.fields.email = fields.email;
       history.push("/");
     } catch (e) {
       onError(e);

@@ -13,10 +13,14 @@ function App() {
   const history = useHistory();
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [isAuthenticated, userHasAuthenticated] = useState(false);
-  useEffect(() => {onLoad(); }, []);
+  let [userInformation, setUserInformation] = useState("");
+
+  useEffect(() => {onLoad()}, []);
 
   async function onLoad() {
     try {
+      const { attributes } = await Auth.currentAuthenticatedUser();
+      setUserInformation(attributes);
       await Auth.currentSession();
       userHasAuthenticated(true);
     }
@@ -50,11 +54,18 @@ function App() {
           <Navbar.Collapse className="justify-content-end">
             <Nav activeKey={window.location.pathname}>
               {isAuthenticated ? (
+                <>
+                <Nav.Link>Olá, {userInformation.name ? userInformation.name.split(" ")[0] : "Usuário"}!</Nav.Link>
+                <LinkContainer to="/order/new">
+                    <Nav.Link>Comprar</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/myorders">
+                    <Nav.Link>Pedidos</Nav.Link>
+                </LinkContainer>
                 <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                </>
               ) : (<>
-                  <LinkContainer to="/signup">
-                    <Nav.Link>Signup</Nav.Link>
-                  </LinkContainer>
+                  
                   <LinkContainer to="/login">
                     <Nav.Link>Login</Nav.Link>
                   </LinkContainer>

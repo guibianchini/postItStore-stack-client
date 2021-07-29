@@ -10,6 +10,7 @@ import { Auth } from "aws-amplify";
 
 export default function Signup() {
   const [fields, handleFieldChange] = useFormFields({
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -22,6 +23,7 @@ export default function Signup() {
 
   function validateForm() {
     return (
+      fields.name.length > 0 &&
       fields.email.length > 0 &&
       fields.password.length > 0 &&
       fields.password === fields.confirmPassword
@@ -41,6 +43,9 @@ export default function Signup() {
       const newUser = await Auth.signUp({
         username: fields.email,
         password: fields.password,
+        attributes: {
+          name: fields.name
+        },
       });
       setIsLoading(false);
       setNewUser(newUser);
@@ -52,6 +57,9 @@ export default function Signup() {
         setNewUser({
           username: fields.email,
           password: fields.password,
+          attributes: {
+            name: fields.name
+          },
         });
         Auth.resendSignUp(fields.email);
         setIsLoading(false);
@@ -83,14 +91,14 @@ export default function Signup() {
     return (
       <Form onSubmit={handleConfirmationSubmit}>
         <Form.Group controlId="confirmationCode" size="lg">
-          <Form.Label>Confirmation Code</Form.Label>
+          <Form.Label>Código de Confirmação:</Form.Label>
           <Form.Control
             autoFocus
             type="tel"
             onChange={handleFieldChange}
             value={fields.confirmationCode}
           />
-          <Form.Text muted>Please check your email for the code.</Form.Text>
+          <Form.Text muted>Por favor, verifique o código enviado ao seu e-mail.</Form.Text>
         </Form.Group>
         <LoaderButton
           block
@@ -109,8 +117,18 @@ export default function Signup() {
   function renderForm() {
     return (
       <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="name" size="lg">
+          <Form.Label>Nome Completo</Form.Label>
+          <Form.Control
+            autoFocus
+            type="name"
+            value={fields.name}
+            onChange={handleFieldChange}
+          />
+        </Form.Group>
         <Form.Group controlId="email" size="lg">
           <Form.Label>Email</Form.Label>
+          <Form.Text muted>*É necessário colocar um e-mail válido para receber o código de verificação.</Form.Text>
           <Form.Control
             autoFocus
             type="email"
@@ -119,7 +137,7 @@ export default function Signup() {
           />
         </Form.Group>
         <Form.Group controlId="password" size="lg">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Senha</Form.Label>
           <Form.Control
             type="password"
             value={fields.password}
@@ -127,7 +145,7 @@ export default function Signup() {
           />
         </Form.Group>
         <Form.Group controlId="confirmPassword" size="lg">
-          <Form.Label>Confirm Password</Form.Label>
+          <Form.Label>Confirme sua senha</Form.Label>
           <Form.Control
             type="password"
             onChange={handleFieldChange}

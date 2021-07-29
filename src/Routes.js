@@ -5,7 +5,7 @@ import NotFound from "./containers/NotFound";
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import Order from "./containers/Order";
-import MyOrder from "./containers/MyOrder";
+import MyOrders from "./containers/MyOrders";
 
 export default function Routes() {
   return (
@@ -19,11 +19,11 @@ export default function Routes() {
       <Route exact path="/signup">
         <Signup />
       </Route>
+      <Route exact path="/myorders">
+        <MyOrders />
+      </Route>
       <Route exact path="/order/new">
         <Order />
-      </Route>
-      <Route exact path="/order/:id">
-        <MyOrder />
       </Route>
       <Route>
         <NotFound />
