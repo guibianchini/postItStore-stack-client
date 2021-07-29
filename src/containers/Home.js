@@ -45,10 +45,13 @@ export default function Home() {
           </ListGroup.Item>
         </LinkContainer>
         {order.map(({ orderID, totalPrice, address, content, boughtAt }) => (
-          <LinkContainer key={orderID} to={`/order/${orderID}`}>
             <ListGroup.Item action>
             <span className="font-weight-bold">
                 {content.trim().split("\n")[0]}
+              </span>
+              <br />
+            <span className="font-weight-bold">
+                {orderID}
               </span>
               <br />
             <span className="font">
@@ -64,7 +67,6 @@ export default function Home() {
                 Realizada em: {new Date(boughtAt).toLocaleString()}
               </span>
             </ListGroup.Item>
-          </LinkContainer>
         ))}
       </>
     );

@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import { API } from "aws-amplify";
+import React, { useRef, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { API, Storage } from "aws-amplify";
 import { onError } from "../libs/errorLib";
 import Form from "react-bootstrap/Form";
 import LoaderButton from "../components/LoaderButton";
 import config from "../config";
 import "./MyOrder.css";
 
-export default function MyOrder() {
+export default function Notes() {
+  // const file = useRef(null);
+  const { id } = useParams();
+  // const history = useHistory();
+  const [note, setNote] = useState(null);
+  const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  
-  const { id } = useParams();
-  const history = useHistory();
-  const [order, setOrder] = useState(null);
-  const [content, setContent] = useState("");
-  const [totalPrice, setTotalPrice] = useState("");
-  const [address, setAddress] = useState("");
 
   useEffect(() => {
     function loadOrder() {
@@ -25,16 +23,21 @@ export default function MyOrder() {
 
     async function onLoad() {
       try {
-        const order = await loadOrder();
-        const { totalPrice, address, content } = order;
-        setContent(content);
-        setTotalPrice(totalPrice);
-        setAddress(address);
-        setOrder(order);
+        const note = await loadOrder();
+        // const { content, attachment } = note;
+
+        // if (attachment) {
+        //   note.attachmentURL = await Storage.vault.get(attachment);
+        // }
+
+        // setContent(content);
+        // setNote(note);
       } catch (e) {
+        console.log(e);
         onError(e);
       }
     }
+
     onLoad();
   }, [id]);
 
@@ -46,10 +49,22 @@ export default function MyOrder() {
     return str.replace(/^\w+-/, "");
   }
   
+  // function handleFileChange(event) {
+  //   file.current = event.target.files[0];
+  // }
+  
   async function handleSubmit(event) {
-    let attachment;
+    // let attachment;
   
     event.preventDefault();
+  
+    // if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
+    //   alert(
+    //     `Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE /
+    //       1000000} MB.`
+    //   );
+    //   return;
+    // }
   
     setIsLoading(true);
   }
@@ -69,8 +84,8 @@ export default function MyOrder() {
   }
   
   return (
-    <div className="MyOrder">
-      {order && (
+    <div className="Notes">
+      {/* {note && (
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="content">
             <Form.Control
@@ -81,17 +96,18 @@ export default function MyOrder() {
           </Form.Group>
           <Form.Group controlId="file">
             <Form.Label>Attachment</Form.Label>
-            {order.attachment && (
+            {note.attachment && (
               <p>
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
-                  href={order.attachmentURL}
+                  href={note.attachmentURL}
                 >
-                  {formatFilename(order.attachment)}
+                  {formatFilename(note.attachment)}
                 </a>
               </p>
             )}
+            <Form.Control onChange={handleFileChange} type="file" />
           </Form.Group>
           <LoaderButton
             block
@@ -112,7 +128,7 @@ export default function MyOrder() {
             Delete
           </LoaderButton>
         </Form>
-      )}
+      )} */}
     </div>
   );
 }

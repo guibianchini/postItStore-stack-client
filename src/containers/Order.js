@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import LoaderButton from "../components/LoaderButton";
 import { onError } from "../libs/errorLib";
 import "./Order.css";
-import { API } from "aws-amplify";
+import { Auth, API } from "aws-amplify";
 
 export default function Order() {
   const history = useHistory();
@@ -28,7 +28,7 @@ export default function Order() {
   const [totalPrice, setTotalPrice] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
-
+  
   function validateForm() {
     return content.length > 0 && nameClient.length > 0 && addressStreet.length > 0 && addressNumber.length > 0;
   }
@@ -54,11 +54,12 @@ export default function Order() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-
     setIsLoading(true);
-  
+    
+
+
     try {
-      await makeOrder({ nameClient, address, content, totalPrice });
+      await makeOrder({ nameClient, address, content, totalPrice});
       history.push("/");
     } catch (e) {
       onError(e);
@@ -68,10 +69,23 @@ export default function Order() {
   
   function makeOrder(order) {
     order.content = order.content.replace(/\n/g,'; ');
-    return API.post("order", "/postitstore", {
+    console.log(order);
+    return API.post("order", "/sdsd", {
       body: order
     });
   }
+
+
+  const emailClient = Auth.currentUserInfo()
+  .then((response) => response.attributes)
+  .then((attributes) => {
+    return attributes.email;
+  });
+
+const getEmail = async () => {
+  let a = await emailClient;
+  console.log(a);
+};
 
   return (
       <Form onSubmit={handleSubmit}>
@@ -81,6 +95,13 @@ export default function Order() {
           Nome Completo (*)
           </Form.Label>
           <Form.Control placeholder="ex.: João da Silva" value={nameClient} onChange={(e) => setNameClient(e.target.value)}/>
+        </Form.Group>
+
+        <Form.Group controlId="nameClient">
+          <Form.Label>
+          E-mail
+          </Form.Label>
+          <Form.Control id="emaill" placeholder="ex.: João da Silva" value={emailClient.then(e => e)} onChange={(e) => setNameClient(e.target.value)}/>
         </Form.Group>
 
         <Row className="mb-3">
