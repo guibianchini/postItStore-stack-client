@@ -15,7 +15,9 @@ function App() {
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   let [userInformation, setUserInformation] = useState("");
 
-  useEffect(() => {onLoad()}, []);
+  useEffect(() => {
+    onLoad();
+  }, []);
 
   async function onLoad() {
     try {
@@ -23,13 +25,12 @@ function App() {
       setUserInformation(attributes);
       await Auth.currentSession();
       userHasAuthenticated(true);
-    }
-    catch(e) {
-      if (e !== 'No current user') {
+    } catch (e) {
+      if (e !== "No current user") {
         onError(e);
       }
     }
-  
+
     setIsAuthenticating(false);
   }
 
@@ -38,7 +39,7 @@ function App() {
 
     userHasAuthenticated(false);
 
-    history.push("/login");
+    history.push("/");
   }
 
   return (
@@ -55,17 +56,26 @@ function App() {
             <Nav activeKey={window.location.pathname}>
               {isAuthenticated ? (
                 <>
-                <Nav.Link>Olá, {userInformation.name ? userInformation.name.split(" ")[0] : "Usuário"}!</Nav.Link>
-                <LinkContainer to="/order/new">
+                  <Nav.Link>
+                    Olá,{" "}
+                    {userInformation.name
+                      ? userInformation.name.split(" ")[0]
+                      : "Usuário"}
+                    !
+                  </Nav.Link>
+                  <LinkContainer to="/order/new">
                     <Nav.Link>Comprar</Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/myorders">
+                  </LinkContainer>
+                  <LinkContainer to="/myorders">
                     <Nav.Link>Pedidos</Nav.Link>
-                </LinkContainer>
-                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                  </LinkContainer>
+                  <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
                 </>
-              ) : (<>
-                  
+              ) : (
+                <>
+                  <LinkContainer to="/signup">
+                    <Nav.Link>Cadastro</Nav.Link>
+                  </LinkContainer>
                   <LinkContainer to="/login">
                     <Nav.Link>Login</Nav.Link>
                   </LinkContainer>

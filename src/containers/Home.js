@@ -2,7 +2,6 @@ import React from "react";
 import "./Home.css";
 
 export default function Home() {
-
   function renderLander() {
     return (
       <div className="lander">
@@ -10,10 +9,6 @@ export default function Home() {
         <p className="text-muted">Lembre-se do que mais te assusta!</p>
       </div>
     );
-    }
-  return (
-    <div className="Home">
-      {renderLander()}
-    </div>
-  );
   }
+  return <div className="Home">{renderLander()}</div>;
+}

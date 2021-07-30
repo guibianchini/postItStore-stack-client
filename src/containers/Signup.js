@@ -36,15 +36,15 @@ export default function Signup() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-  
+
     setIsLoading(true);
-  
+
     try {
       const newUser = await Auth.signUp({
         username: fields.email,
         password: fields.password,
         attributes: {
-          name: fields.name
+          name: fields.name,
         },
       });
       setIsLoading(false);
@@ -52,33 +52,33 @@ export default function Signup() {
     } catch (e) {
       onError(e);
 
-      if (e.name === 'UsernameExistsException') {
+      if (e.name === "UsernameExistsException") {
         ///current bug if you signup already existing user, it will succeed
         setNewUser({
           username: fields.email,
           password: fields.password,
           attributes: {
-            name: fields.name
+            name: fields.name,
           },
         });
         Auth.resendSignUp(fields.email);
         setIsLoading(false);
-        return
+        return;
       }
 
       setIsLoading(false);
     }
   }
-  
+
   async function handleConfirmationSubmit(event) {
     event.preventDefault();
-  
+
     setIsLoading(true);
-  
+
     try {
       await Auth.confirmSignUp(fields.email, fields.confirmationCode);
       await Auth.signIn(fields.email, fields.password);
-  
+
       userHasAuthenticated(true);
       history.push("/");
     } catch (e) {
@@ -98,7 +98,9 @@ export default function Signup() {
             onChange={handleFieldChange}
             value={fields.confirmationCode}
           />
-          <Form.Text muted>Por favor, verifique o código enviado ao seu e-mail.</Form.Text>
+          <Form.Text muted>
+            Por favor, verifique o código enviado ao seu e-mail.
+          </Form.Text>
         </Form.Group>
         <LoaderButton
           block
@@ -128,13 +130,16 @@ export default function Signup() {
         </Form.Group>
         <Form.Group controlId="email" size="lg">
           <Form.Label>Email</Form.Label>
-          <Form.Text muted>*É necessário colocar um e-mail válido para receber o código de verificação.</Form.Text>
           <Form.Control
             autoFocus
             type="email"
             value={fields.email}
             onChange={handleFieldChange}
           />
+          <Form.Text muted>
+            *É necessário colocar um e-mail válido para receber o seu código de
+            verificação.
+          </Form.Text>
         </Form.Group>
         <Form.Group controlId="password" size="lg">
           <Form.Label>Senha</Form.Label>
@@ -153,14 +158,15 @@ export default function Signup() {
           />
         </Form.Group>
         <LoaderButton
+          class="loaderButton"
           block
           size="lg"
           type="submit"
-          variant="success"
+          variant="outline-primary"
           isLoading={isLoading}
           disabled={!validateForm()}
         >
-          Signup
+          Cadastrar
         </LoaderButton>
       </Form>
     );

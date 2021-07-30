@@ -1,14 +1,28 @@
-/* #productsImg{
-  height: 300px;
-  width: 300px;
-} */
-
-
-#products{
+.products{
   display: flex;
   flex-wrap: wrap;
 }
 
 .product{
   flex: 0 0 33.333333%;
+  margin-bottom: 10px;
+}
+
+.productImg{
+  height: 230px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .product {
+    flex: 0 0 100%;
+  }
+  
+  .contentPrice{
+    display: grid;
+  }
+
 }
