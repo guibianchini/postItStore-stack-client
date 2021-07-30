@@ -16,8 +16,6 @@ export default function Update() {
     newPassword: "",
     confirmNewPassword: "",
   });
-
-  const [updateCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { isAuthenticated } = useAppContext();
 
@@ -29,8 +27,6 @@ export default function Update() {
 
       try {
         const user = await Auth.currentAuthenticatedUser();
-        updateCurrentUser(user);
-
         fields.name = user.attributes.name;
         fields.email = user.attributes.email;
       } catch (e) {
@@ -42,7 +38,7 @@ export default function Update() {
       setIsLoading(false);
     }
     onLoad();
-  }, [updateCurrentUser, fields, isAuthenticated]);
+  }, [fields, isAuthenticated]);
 
   //Valida o formulário de acordo com os parametros definidos
   function validateForm() {
