@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useHistory, Link } from "react-router-dom";
-import LoaderButton from "../components/LoaderButton";
+import { Link } from "react-router-dom";
 import { useAppContext } from "../libs/contextLib";
-import { useFormFields } from "../libs/hooksLib";
 import { onError } from "../libs/errorLib";
 import "./Profile.css";
 import { Auth } from "aws-amplify";
@@ -31,7 +29,7 @@ export default function Update() {
       setIsLoading(false);
     }
     onLoad();
-  }, []);
+  }, [isAuthenticated]);
 
   function renderForm() {
     return (
