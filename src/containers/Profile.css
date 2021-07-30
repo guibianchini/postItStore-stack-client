@@ -1,0 +1,14 @@
+@media only screen and (max-width: 768px) {
+  .Profile {
+    padding: 60px 0;
+  }
+
+  .Profile form {
+    margin: 0 auto;
+    max-width: 320px;
+  }
+}
+
+.linkButton:hover{
+  text-decoration: none;
+}

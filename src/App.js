@@ -20,11 +20,12 @@ function App() {
   }, []);
 
   async function onLoad() {
+    //Extrai sessão atual e dados do usuário atual
     try {
-      const { attributes } = await Auth.currentAuthenticatedUser();
-      setUserInformation(attributes);
       await Auth.currentSession();
       userHasAuthenticated(true);
+      const { attributes } = await Auth.currentAuthenticatedUser();
+      setUserInformation(attributes);
     } catch (e) {
       if (e !== "No current user") {
         onError(e);
@@ -55,7 +56,8 @@ function App() {
           <Navbar.Collapse className="justify-content-end">
             <Nav activeKey={window.location.pathname}>
               {isAuthenticated ? (
-                <>
+                <><LinkContainer to="/profile">
+                  {/* Se o usuário estiver logado, recebe outras opções no menu e o seu nome impresso */}
                   <Nav.Link>
                     Olá,{" "}
                     {userInformation.name
@@ -63,6 +65,7 @@ function App() {
                       : "Usuário"}
                     !
                   </Nav.Link>
+                </LinkContainer>
                   <LinkContainer to="/order/new">
                     <Nav.Link>Comprar</Nav.Link>
                   </LinkContainer>

@@ -1,14 +1,10 @@
 @media all and (min-width: 480px) {
-    .Login {
+    .Forgotpass {
       padding: 60px 0;
     }
   
-    .Login form {
+    .Forgotpass form {
       margin: 0 auto;
       max-width: 320px;
     }
-  }
-
-  .linkButton:hover{
-    text-decoration: none;
   }

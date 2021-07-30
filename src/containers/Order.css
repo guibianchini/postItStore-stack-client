@@ -18,11 +18,28 @@
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
   .product {
-    flex: 0 0 100%;
+    flex: 0 0 49.9999%;
   }
   
+  .productImg{
+    height: 110px;
+    width: auto;
+    display: block;
+  }
+
   .contentPrice{
     display: grid;
   }
 
+}
+
+@media all and (min-width: 480px) {
+  .Settings {
+    padding: 60px 0;
+  }
+
+  .Settings form {
+    margin: 0 auto;
+    max-width: 480px;
+  }
 }

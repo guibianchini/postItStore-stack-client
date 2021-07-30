@@ -1,0 +1,14 @@
+@media only screen and (max-width: 768px) {
+  .settings {
+    padding: 60px 0;
+  }
+
+  .settings form {
+    margin: 0 auto;
+    max-width: 320px;
+  }
+}
+
+.linkButton:hover{
+  text-decoration: none;
+}

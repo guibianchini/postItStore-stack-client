@@ -21,14 +21,13 @@ export default function Order() {
   const [addressNumber, setAddressNumber] = useState("");
   const [addressComplement, setAddressComplement] = useState("");
 
-  const [address, setAddress] = useState("");
-
   const [content, setContent] = useState("");
   const [totalPrice, setTotalPrice] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
   const { isAuthenticated } = useAppContext();
 
+  //useEffect para carregar todos os produtos disponíveis para compra no Database
   useEffect(() => {
     async function onLoad() {
       if (!isAuthenticated) {
@@ -47,10 +46,12 @@ export default function Order() {
     onLoad();
   }, [isAuthenticated]);
 
+  //Faz a requisição dos JSON dos produtos no banco
   function loadProducts() {
     return API.get("order", "/postitstore-products");
   }
 
+  //Prepara renderização para o usuário de cada produto do banco
   function renderProductsList(products) {
     return (
       <>
@@ -90,10 +91,12 @@ export default function Order() {
     );
   }
 
+  //Renderiza para o usuário enquanto página está carregando
   function renderProducts() {
     return <>{!isLoading && renderProductsList(products)}</>;
   }
 
+  //Valida o formulário de acordo com os parametros definidos
   function validateForm() {
     return (
       content.length > 0 &&
@@ -103,6 +106,7 @@ export default function Order() {
     );
   }
 
+  //useEffect para alterar $content e $totalPrice a cada alteração nova de inserção ou remoção de produto
   useEffect(() => {
     let totalPriceProducts = [];
     let eachContent = [];
@@ -123,14 +127,7 @@ export default function Order() {
     setContent(eachContent.join("\n"));
   }, [cart]);
 
-  useEffect(() => {
-    let fullAddress = "";
-    fullAddress += `Logradouro: ${addressStreet} Numero: ${addressNumber} Complemento: ${
-      addressComplement || "-"
-    }`;
-    setAddress(fullAddress);
-  }, [addressStreet, addressNumber, addressComplement]);
-
+  //Função que extrai email do usuário autenticado, envia o pedido para o banco e envia email com pedido para cliente
   async function handleSubmit(event) {
     event.preventDefault();
     setIsLoading(true);
@@ -141,7 +138,9 @@ export default function Order() {
       await makeOrder({
         nameClient,
         emailClient: attributes.email,
-        address,
+        address: `Logradouro: ${addressStreet} Numero: ${addressNumber} Complemento: ${
+          addressComplement || "-"
+        }`,
         content,
         totalPrice,
       });
@@ -153,6 +152,7 @@ export default function Order() {
     }
   }
 
+  //Coloca as informações enviadas no handleSubmit dentro do banco
   function makeOrder(order) {
     return API.post("order", "/postitstore", {
       body: order,

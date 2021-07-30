@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
-import Form from "react-bootstrap/Form";
-import { useHistory } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import { useAppContext } from "../libs/contextLib";
 import { useFormFields } from "../libs/hooksLib";
 import { onError } from "../libs/errorLib";
+import { Link } from "react-router-dom";
 import "./Login.css";
 
 export default function Login() {
-  const history = useHistory();
   const { userHasAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
   const [fields, handleFieldChange] = useFormFields({
@@ -17,6 +16,7 @@ export default function Login() {
     password: "",
   });
 
+  //Valida o formulário de acordo com os parametros definidos
   function validateForm() {
     return fields.email.length > 0 && fields.password.length > 0;
   }
@@ -26,10 +26,10 @@ export default function Login() {
 
     setIsLoading(true);
 
+    //Faz o login e armazena caso o usuário esteja autenticado.
     try {
       await Auth.signIn(fields.email, fields.password);
       userHasAuthenticated(true);
-      history.push("/");
     } catch (e) {
       onError(e);
       setIsLoading(false);
@@ -65,6 +65,11 @@ export default function Login() {
         >
           Login
         </LoaderButton>
+        <Link className="linkButton" to="/forgotpass">
+          <Button block size="lg" variant="outline-danger">
+            Esqueci a Senha
+          </Button>
+        </Link>
       </Form>
     </div>
   );

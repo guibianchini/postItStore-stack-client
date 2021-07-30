@@ -1,6 +1,7 @@
 import React from "react";
 import "./Home.css";
 
+//Apresenta página Home da Aplicação
 export default function Home() {
   function renderLander() {
     return (

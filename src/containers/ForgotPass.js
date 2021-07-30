@@ -10,29 +10,29 @@ import { Auth } from "aws-amplify";
 
 export default function Signup() {
   const [fields, handleFieldChange] = useFormFields({
-    name: "",
     email: "",
     password: "",
     confirmPassword: "",
     confirmationCode: "",
   });
+
   const history = useHistory();
-  const [newUser, setNewUser] = useState(null);
+  const [newPass, setNewPass] = useState(null);
   const { userHasAuthenticated } = useAppContext();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   //Valida o formulário de acordo com os parametros definidos
   function validateForm() {
-    return (
-      fields.name.length > 0 &&
-      fields.email.length > 0 &&
-      fields.password.length > 0 &&
-      fields.password === fields.confirmPassword
-    );
+    return fields.email.length > 0;
   }
 
   function validateConfirmationForm() {
-    return fields.confirmationCode.length > 0;
+    return (
+      fields.confirmationCode.length > 0 &&
+      fields.password.length > 0 &&
+      fields.password === fields.confirmPassword &&
+      fields.confirmationCode.length > 0
+    );
   }
 
   async function handleSubmit(event) {
@@ -41,32 +41,11 @@ export default function Signup() {
     setIsLoading(true);
 
     try {
-      const newUser = await Auth.signUp({
-        username: fields.email,
-        password: fields.password,
-        attributes: {
-          name: fields.name,
-        },
-      });
+      const newPass = await Auth.forgotPassword(fields.email);
       setIsLoading(false);
-      setNewUser(newUser);
+      setNewPass(newPass);
     } catch (e) {
       onError(e);
-
-      //Tratamento de exceção para o caso do usuário ter sido cadastro mas não ter recebido o código de verificação
-      if (e.name === "UsernameExistsException") {
-        setNewUser({
-          username: fields.email,
-          password: fields.password,
-          attributes: {
-            name: fields.name,
-          },
-        });
-        Auth.resendSignUp(fields.email);
-        setIsLoading(false);
-        return;
-      }
-
       setIsLoading(false);
     }
   }
@@ -78,9 +57,12 @@ export default function Signup() {
 
     //Se for possível cadastrar, já executa o login com os dados fornecidos
     try {
-      await Auth.confirmSignUp(fields.email, fields.confirmationCode);
+      await Auth.forgotPasswordSubmit(
+        fields.email,
+        fields.confirmationCode,
+        fields.password
+      );
       await Auth.signIn(fields.email, fields.password);
-
       userHasAuthenticated(true);
       history.push("/");
     } catch (e) {
@@ -92,18 +74,35 @@ export default function Signup() {
   function renderConfirmationForm() {
     return (
       <Form onSubmit={handleConfirmationSubmit}>
+        <Form.Group controlId="password" size="lg">
+          <Form.Label>Nova Senha</Form.Label>
+          <Form.Control
+            type="password"
+            value={fields.password}
+            onChange={handleFieldChange}
+          />
+        </Form.Group>
+        <Form.Group controlId="confirmPassword" size="lg">
+          <Form.Label>Confirme sua nova senha</Form.Label>
+          <Form.Control
+            type="password"
+            onChange={handleFieldChange}
+            value={fields.confirmPassword}
+          />
+        </Form.Group>
+
         <Form.Group controlId="confirmationCode" size="lg">
           <Form.Label>Código de Confirmação:</Form.Label>
           <Form.Control
-            autoFocus
             type="tel"
-            onChange={handleFieldChange}
             value={fields.confirmationCode}
+            onChange={handleFieldChange}
           />
           <Form.Text muted>
             Por favor, verifique o código enviado ao seu e-mail.
           </Form.Text>
         </Form.Group>
+
         <LoaderButton
           block
           size="lg"
@@ -112,7 +111,7 @@ export default function Signup() {
           isLoading={isLoading}
           disabled={!validateConfirmationForm()}
         >
-          Verificar
+          Confirmar
         </LoaderButton>
       </Form>
     );
@@ -121,18 +120,10 @@ export default function Signup() {
   function renderForm() {
     return (
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="name" size="lg">
-          <Form.Label>Nome Completo</Form.Label>
-          <Form.Control
-            autoFocus
-            type="name"
-            value={fields.name}
-            onChange={handleFieldChange}
-          />
-        </Form.Group>
         <Form.Group controlId="email" size="lg">
           <Form.Label>Email</Form.Label>
           <Form.Control
+            autoFocus
             type="email"
             value={fields.email}
             onChange={handleFieldChange}
@@ -141,22 +132,6 @@ export default function Signup() {
             *É necessário colocar um e-mail válido para receber o seu código de
             verificação.
           </Form.Text>
-        </Form.Group>
-        <Form.Group controlId="password" size="lg">
-          <Form.Label>Senha</Form.Label>
-          <Form.Control
-            type="password"
-            value={fields.password}
-            onChange={handleFieldChange}
-          />
-        </Form.Group>
-        <Form.Group controlId="confirmPassword" size="lg">
-          <Form.Label>Confirme sua senha</Form.Label>
-          <Form.Control
-            type="password"
-            onChange={handleFieldChange}
-            value={fields.confirmPassword}
-          />
         </Form.Group>
         <LoaderButton
           className="loaderButton"
@@ -167,15 +142,15 @@ export default function Signup() {
           isLoading={isLoading}
           disabled={!validateForm()}
         >
-          Cadastrar
+          Receber Código
         </LoaderButton>
       </Form>
     );
   }
 
   return (
-    <div className="Signup">
-      {newUser === null ? renderForm() : renderConfirmationForm()}
+    <div className="Forgotpass">
+      {newPass === null ? renderForm() : renderConfirmationForm()}
     </div>
   );
 }

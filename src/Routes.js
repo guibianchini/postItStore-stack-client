@@ -1,11 +1,16 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Home from "./containers/Home";
 import NotFound from "./containers/NotFound";
 import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import Order from "./containers/Order";
 import MyOrders from "./containers/MyOrders";
+import Profile from "./containers/Profile";
+import Settings from "./containers/Settings";
+import ForgotPassword from "./containers/ForgotPass"
+import AuthenticatedRoute from "./components/AuthenticatedRoute";
+import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 
 export default function Routes() {
   return (
@@ -13,18 +18,27 @@ export default function Routes() {
       <Route exact path="/">
         <Home />
       </Route>
-      <Route exact path="/login">
+      <UnauthenticatedRoute exact path="/login">
         <Login />
-      </Route>
-      <Route exact path="/signup">
+      </UnauthenticatedRoute>
+      <UnauthenticatedRoute exact path="/signup">
         <Signup />
-      </Route>
-      <Route exact path="/myorders">
-        <MyOrders />
-      </Route>
-      <Route exact path="/order/new">
+      </UnauthenticatedRoute>
+      <UnauthenticatedRoute exact path="/forgotpass">
+        <ForgotPassword />
+      </UnauthenticatedRoute>
+      <AuthenticatedRoute exact path="/order/new">
         <Order />
-      </Route>
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/profile">
+        <Profile />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/settings">
+        <Settings />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/myorders">
+        <MyOrders />
+      </AuthenticatedRoute>
       <Route>
         <NotFound />
       </Route>

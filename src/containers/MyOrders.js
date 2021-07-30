@@ -11,6 +11,7 @@ export default function Home() {
   const { isAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(true);
 
+  //useEffect para carregar pedidos feitos que estão armazenados no database
   useEffect(() => {
     async function onLoad() {
       if (!isAuthenticated) {
@@ -34,6 +35,7 @@ export default function Home() {
     return API.get("order", "/postitstore");
   }
 
+  //Prepara renderização para o usuário de cada pedido do banco
   function renderOrderList(order) {
     return (
       <>
@@ -61,7 +63,8 @@ export default function Home() {
       </>
     );
   }
-
+  
+  //Renderiza para o usuário enquanto página está carregando
   function renderOrder() {
     return (
       <div className="Order">
