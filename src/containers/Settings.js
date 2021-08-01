@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useHistory, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import LoaderButton from "../components/LoaderButton";
 import { useAppContext } from "../libs/contextLib";
 import { useFormFields } from "../libs/hooksLib";
@@ -16,9 +16,6 @@ export default function Update() {
     newPassword: "",
     confirmNewPassword: "",
   });
-
-  const history = useHistory();
-  const [currentUser, updateCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { isAuthenticated } = useAppContext();
 
@@ -30,8 +27,6 @@ export default function Update() {
 
       try {
         const user = await Auth.currentAuthenticatedUser();
-        updateCurrentUser(user);
-
         fields.name = user.attributes.name;
         fields.email = user.attributes.email;
       } catch (e) {
@@ -43,7 +38,7 @@ export default function Update() {
       setIsLoading(false);
     }
     onLoad();
-  }, [isAuthenticated]);
+  }, [fields, isAuthenticated]);
 
   //Valida o formulário de acordo com os parametros definidos
   function validateForm() {
@@ -59,7 +54,7 @@ export default function Update() {
   async function updateUser() {
     const user = await Auth.currentAuthenticatedUser();
 
-    if (fields.name != user.attributes.name) {
+    if (fields.name !== user.attributes.name) {
       await Auth.updateUserAttributes(user, {
         name: `${fields.name}`,
       });

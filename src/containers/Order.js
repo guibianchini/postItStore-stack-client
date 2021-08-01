@@ -65,9 +65,9 @@ export default function Order() {
                 src={imageSource}
               />
               <Card.Body>
-                <Card.Title>{name}</Card.Title>
-                <Card.Subtitle>R${value}</Card.Subtitle>
-                <Card.Text>{description}</Card.Text>
+                <Card.Title className="nameProduct">{name}</Card.Title>
+                <Card.Subtitle className="priceProduct">R${value}</Card.Subtitle>
+                <Card.Text className="contentProduct">{description}</Card.Text>
               </Card.Body>
               <Form.Control
                 value={itemsQTD[productID]}

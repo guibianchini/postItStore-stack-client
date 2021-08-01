@@ -31,6 +31,21 @@
     display: grid;
   }
 
+  .contentProduct{
+    margin-top: 6px;
+    font-size: 11px;
+    text-align: justify;
+  }
+
+  .nameProduct{
+    font-size: 15px;
+  }
+
+  .priceProduct{
+    font-weight: bold;
+    font-size: 12px;
+  }
+
 }
 
 @media all and (min-width: 480px) {
