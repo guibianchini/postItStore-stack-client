@@ -19,7 +19,7 @@ export default function Signup() {
   const history = useHistory();
   const [newPass, setNewPass] = useState(null);
   const { userHasAuthenticated } = useAppContext();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   //Valida o formulário de acordo com os parametros definidos
   function validateForm() {
