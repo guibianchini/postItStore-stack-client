@@ -53,6 +53,9 @@ export default function Home() {
                 <Card.Text className="font">
                   Endereço:{address.split(":")[1].replace("Numero", " ")}
                 </Card.Text>
+                <Card.Text className="text-muted">
+                  Conteúdo: {content.replace('\n','; ')}
+                </Card.Text>
                 <Card.Text className="text-muted ">
                   Realizada em: {new Date(boughtAt).toLocaleString()}
                 </Card.Text>
